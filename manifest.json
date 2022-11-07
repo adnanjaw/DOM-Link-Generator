@@ -1,0 +1,21 @@
+{
+    "name": "DOM Link Generator",
+    "description": "Adding a link to the DOM elements.",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": [
+        "activeTab",
+        "tabs"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://dev.azure.com/*"
+            ],
+            "js": [
+                "jquery-3.6.0.min.js",
+                "content_scripts.js"
+            ]
+        }
+    ]
+}
