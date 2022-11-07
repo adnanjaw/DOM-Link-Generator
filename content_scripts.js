@@ -1,10 +1,8 @@
-$(document).ready(function () {
+$(window).bind("load", function () {
     setTimeout(function () {
-
         this.addJiraLink();
-
     }, 5000)
-})
+});
 
 function addJiraLink() {
     var clientRefrenceFiled = document.evaluate(
