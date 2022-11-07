@@ -1,50 +1,65 @@
-$(window).bind("load", function () {
+const FILED_LABEL = 'client reference';
+const LINK_BACKSLASH = '/';
+const options = {};
 
-    var jiralink = '';
-    chrome.storage.local.get(['jiraLink'], (result) => {
-        if (chrome.runtime.lastError)
-            console.log('Error getting');
+const getOptionsFromStorageAsync = getAllStorageLocalData().then(items => {
+    Object.assign(options, items);
+})
 
-        jiralink = result.jiraLink;
-    });
+const openOptionPage = function () {
+    chrome.runtime.sendMessage('showOptions');
+    return false;
+}
+
+$(window).bind("load", async function () {
+
+    await getOptionsFromStorageAsync;
+
+    if (options.jiraLink === '' || options.jiraLink === undefined) {
+        return openOptionPage();
+    }
 
     setTimeout(function () {
-        if (jiralink === '' || jiralink === undefined) {
-            window.location.href = "chrome-extension://oomagoephlkmjnihcoladahhnokjagkc/options.html";
-        }
-        this.addJiraLink(jiralink);
-    }, 5000, jiralink)
+        this.addJiraLinkToAzurePlanningSection(options.jiraLink);
+    }, 5000, options.jiraLink)
 });
 
-function addJiraLink(jiralink) {
-    var clientRefrenceFiled = document.evaluate(
-        "/html/body/div[10]/div[2]/div/div[2]/div/div/div/div[3]/div[1]/div/div[2]/div[1]/div[1]/div/div/div[2]/div/div[3]/div[2]/div/div[1]/input",
-        document.body);
-    var clientRefrenceInput = clientRefrenceFiled.iterateNext();
+function addJiraLinkToAzurePlanningSection(jiraLink) {
+    const wrapper = $('.wrapping-container').find('.section2 .grid-group');
+    const container = wrapper.find('.tfs-collapsible-content')
+    const controlCollection = wrapper.find('.control');
 
+    const clientReferenceInputController = controlCollection.filter(function (index, control) {
+        let label = $(control).find('label').text();
+        if (label.indexOf(FILED_LABEL) >= 0) {
+            return true;
+        }
+    });
 
-    var contanier = document.evaluate(
-        "/html/body/div[10]/div[2]/div/div[2]/div/div/div/div[3]/div[1]/div/div[2]/div[1]/div[1]/div/div/div[2]/div",
-        document.body
-    );
-    var contanierDiv = contanier.iterateNext();
+    const clientReferenceInput = clientReferenceInputController.find('input')
+    if (jiraLink.endsWith(LINK_BACKSLASH) === false) {
+        jiraLink = jiraLink + LINK_BACKSLASH
+    }
 
-    if ($(clientRefrenceInput).val() !== '') {
-        var href = jiralink + $(clientRefrenceInput).val();
-        var jiraLink = $('<a></a>').attr("href", href).append('<h3>Jirq Link</h3>');
+    const href = jiraLink + $(clientReferenceInput).val();
+    const jiraLinkTag = $('<a></a>')
+        .attr('href', href)
+        .attr('target', '_blank')
+        .attr('rel', 'noopener noreferrer')
+        .append('<h3>JIRA Link</h3>');
 
-        $(contanierDiv).append(jiraLink);
+    if ($(clientReferenceInput).val() !== '') {
+        $(container).append(jiraLinkTag);
     }
 }
 
-const toPromise = (callback) => {
-    const promise = new Promise((resolve, reject) => {
-        try {
-            callback(resolve, reject);
-        }
-        catch (err) {
-            reject(err);
-        }
+function getAllStorageLocalData() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(null, (items) => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError);
+            }
+            resolve(items);
+        });
     });
-    return promise;
 }

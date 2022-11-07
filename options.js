@@ -10,13 +10,13 @@ $(function () {
     // add jiraLink
     $('#jira-link-submit').click(function () {
         let jiraLink = $('#jira-link').val();
-        const value = jiraLink;
         if (jiraLink) {
-            chrome.storage.local.set({ 'jiraLink': value }, () => {
+            chrome.storage.local.set({ 'jiraLink': jiraLink }, () => {
                 if (chrome.runtime.lastError)
                     console.log('Error setting');
 
-                console.log('Stored name: ' + value);
+                alert('jiraLink is stored');
+                close();
             });
         };
     })

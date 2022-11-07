@@ -5,9 +5,14 @@
     "manifest_version": 3,
     "permissions": [
         "activeTab",
+        "tabGroups",
         "tabs",
-        "storage"
+        "storage",
+        "nativeMessaging"
     ],
+    "background": {
+        "service_worker": "background.js"
+    },
     "options_page": "options.html",
     "content_scripts": [
         {
