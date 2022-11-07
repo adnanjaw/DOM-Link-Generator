@@ -5,8 +5,10 @@
     "manifest_version": 3,
     "permissions": [
         "activeTab",
-        "tabs"
+        "tabs",
+        "storage"
     ],
+    "options_page": "options.html",
     "content_scripts": [
         {
             "matches": [
@@ -15,6 +17,16 @@
             "js": [
                 "jquery-3.6.0.min.js",
                 "content_scripts.js"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "options.html"
+            ],
+            "matches": [
+                "https://dev.azure.com/*"
             ]
         }
     ]
