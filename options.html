@@ -25,7 +25,8 @@
                                 placeholder="Azuer Planning Field Title">
                         </div>
                         <div class="form-group col mb-2">
-                            <button type="submit" class="btn btn-primary mb-2" id="jira-link-submit">Add Link</button>
+                            <button type="submit" class="btn btn-primary mb-2" id="dynamic-link-submit">Add
+                                Link</button>
                         </div>
                     </div>
                 </form>
@@ -49,23 +50,31 @@
                 <div class="card-title">
                     <h3>Static Links</h3>
                 </div>
-                <form>
+                <form id="static-link-form">
                     <div class="form-row align-items-center">
                         <div class="form-group col mb-3">
-                            <input type="text" class="form-control" id="jira-link" placeholder="https://jira/browser">
+                            <input type="text" class="form-control" id="static-link-name" placeholder="Link Name">
                         </div>
                         <div class="form-group col mb-3">
-                            <input type="text" class="form-control" placeholder="Last name">
-                        </div>
-                        <div class="form-group col mb-3">
-                            <input type="text" class="form-control" placeholder="Last name">
+                            <input type="text" class="form-control" id="static-link-url"
+                                placeholder="https://jira.com/browser">
                         </div>
                         <div class="form-group col mb-2">
-                            <button type="submit" class="btn btn-primary mb-2" id="jira-link-submit">Add Link</button>
+                            <button type="submit" class="btn btn-primary mb-2" id="static-link-submit">Add Link</button>
                         </div>
-
                     </div>
                 </form>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Link Name</th>
+                            <th scope="col">Link URL</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="static-link-table"></tbody>
+                </table>
             </div>
         </div>
     </div>

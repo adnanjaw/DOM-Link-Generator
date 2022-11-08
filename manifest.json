@@ -1,6 +1,6 @@
 {
-    "name": "DOM Link Generator",
-    "description": "Adding a link to the DOM elements.",
+    "name": "Azure DevOps WorkItem Link",
+    "description": "Adding a link to Azure DevOps WorkItem.",
     "version": "1.0",
     "manifest_version": 3,
     "permissions": [
