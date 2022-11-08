@@ -1,10 +1,72 @@
-<body class="container p-4">
+<body class="p-4">
     <script src="jquery-3.6.0.min.js"></script>
     <script src="options.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <h1>Options</h1>
-    <label for="limit" class="form-label col">Enter JIRA link:</label>
-    <input type="text" class="form-control col" id="jira-link">
-    <!-- button -->
-    <input type="submit" class="btn btn-primary" id='jira-link-submit' value='Save'>
+    <div class="container">
+        <h1>Options</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>Dynamic Links</h3>
+                </div>
+                <form id="dynamic-link-form">
+                    <div class="form-row align-items-center">
+                        <div class="form-group col mb-3">
+                            <input type="text" class="form-control" id="dynamic-link-name" placeholder="Link Name">
+                        </div>
+                        <div class="form-group col mb-3">
+                            <input type="text" class="form-control" id="dynamic-link-url"
+                                placeholder="https://jira.com/browser">
+                        </div>
+                        <div class="form-group col mb-3">
+                            <input type="text" class="form-control" id="dynamic-azuer-planning-field-title"
+                                placeholder="Azuer Planning Field Title">
+                        </div>
+                        <div class="form-group col mb-2">
+                            <button type="submit" class="btn btn-primary mb-2" id="jira-link-submit">Add Link</button>
+                        </div>
+                    </div>
+                </form>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Link Name</th>
+                            <th scope="col">Link URL</th>
+                            <th scope="col">Azuer Planning Field Title</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dynamic-link-table"></tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>Static Links</h3>
+                </div>
+                <form>
+                    <div class="form-row align-items-center">
+                        <div class="form-group col mb-3">
+                            <input type="text" class="form-control" id="jira-link" placeholder="https://jira/browser">
+                        </div>
+                        <div class="form-group col mb-3">
+                            <input type="text" class="form-control" placeholder="Last name">
+                        </div>
+                        <div class="form-group col mb-3">
+                            <input type="text" class="form-control" placeholder="Last name">
+                        </div>
+                        <div class="form-group col mb-2">
+                            <button type="submit" class="btn btn-primary mb-2" id="jira-link-submit">Add Link</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
