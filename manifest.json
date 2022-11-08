@@ -1,50 +1,50 @@
 {
-    "name": "Azure DevOps Linkable",
-    "description": "Adding a links to Azure DevOps WorkItem.",
-    "version": "1.0",
-    "manifest_version": 3,
-    "action": {
-        "default_icon": {
-            "16": "favicon_io/favicon-16x16.png",
-            "32": "favicon_io/favicon-32x32.png"
-        }
-    },
-    "icons": {
-        "16": "favicon_io/favicon-16x16.png",
-        "32": "favicon_io/favicon-32x32.png",
-        "48": "favicon_io/favicon-32x32.png",
-        "128": "favicon_io/favicon-32x32.png"
-    },
-    "permissions": [
-        "activeTab",
-        "tabGroups",
-        "tabs",
-        "storage",
-        "nativeMessaging"
-    ],
-    "background": {
-        "service_worker": "background.js"
-    },
-    "options_page": "options.html",
-    "content_scripts": [
-        {
-            "matches": [
-                "https://dev.azure.com/*"
-            ],
-            "js": [
-                "jquery-3.6.0.min.js",
-                "content_scripts.js"
-            ]
-        }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": [
-                "options.html"
-            ],
-            "matches": [
-                "https://dev.azure.com/*"
-            ]
-        }
-    ]
+  "name": "Azure DevOps Linkable",
+  "description": "Adding a links to Azure DevOps WorkItem.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_icon": {
+      "16": "favicon_io/favicon-16x16.png",
+      "32": "favicon_io/favicon-32x32.png"
+    }
+  },
+  "icons": {
+    "16": "favicon_io/favicon-16x16.png",
+    "32": "favicon_io/favicon-32x32.png",
+    "48": "favicon_io/favicon-32x32.png",
+    "128": "favicon_io/favicon-32x32.png"
+  },
+  "permissions": [
+    "activeTab",
+    "tabGroups",
+    "tabs",
+    "storage",
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://dev.azure.com/*"
+      ],
+      "js": [
+        "jquery-3.6.0.min.js",
+        "content_scripts.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "options.html"
+      ],
+      "matches": [
+        "https://dev.azure.com/*"
+      ]
+    }
+  ]
 }

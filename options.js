@@ -1,6 +1,7 @@
 const options = {};
 
 $(async function () {
+
     await refreshTables();
 
     $(document).on('submit', '#dynamic-link-form', async function () {
@@ -23,8 +24,7 @@ $(async function () {
         await getOptionsFromStorageAsync;
 
         let staticLink = {
-            name: $('#static-link-name').val(),
-            url: $('#static-link-url').val(),
+            name: $('#static-link-name').val(), url: $('#static-link-url').val(),
         }
         let staticLinkCollection = $.isEmptyObject(options.staticLinkCollection) ? [] : options.staticLinkCollection;
 
@@ -32,6 +32,14 @@ $(async function () {
         setStorageKey({'staticLinkCollection': staticLinkCollection})
 
         await refreshTables();
+    });
+
+    $(document).on('click', '.deleteDynamicLink', function () {
+        deleteDynamicLink($(this).data('id'));
+    });
+
+    $(document).on('click', '.deleteStaticLink', function () {
+        deleteStaticLink($(this).data('id'));
     });
 
 })
@@ -47,7 +55,7 @@ function addDynamicLinkRow(index, dynamicLink) {
                 <td>${dynamicLink.url}</td>
                 <td>${dynamicLink.azureField}</td>
                 <td>
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-danger deleteDynamicLink" data-id="${index - 1}">Delete</button>
                 </td>
             </tr>`);
 }
@@ -59,22 +67,22 @@ async function getDynamicLinksCollectionAsync() {
     });
 }
 
+async function getStaticLinksCollectionAsync() {
+    $("#static-link-table").empty();
+    $.each(options.staticLinkCollection, function (index, staticLink) {
+        addStaticLinkRow(index, staticLink);
+    });
+}
+
 function addStaticLinkRow(index, staticLink) {
     $('#static-link-table').append(`<tr id="id-${++index}">
                 <th scope="row">${index}</th>
                 <td>${staticLink.name}</td>
                 <td>${staticLink.url}</td>
                 <td>
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-danger deleteStaticLink" data-id="${index - 1}">Delete</button>
                 </td>
             </tr>`);
-}
-
-async function getStaticLinksCollectionAsync() {
-    $("#static-link-table").empty();
-    $.each(options.staticLinkCollection, function (index, staticLink) {
-        addStaticLinkRow(index, staticLink);
-    });
 }
 
 async function refreshTables() {
@@ -102,4 +110,12 @@ function setStorageKey(newKey) {
             console.log('Error setting');
         }
     });
+}
+
+async function deleteDynamicLink(id) {
+    console.log(id);
+}
+
+async function deleteStaticLink(id) {
+    console.log(id);
 }
