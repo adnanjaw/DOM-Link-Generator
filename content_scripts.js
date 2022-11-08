@@ -1,4 +1,3 @@
-const FILED_LABEL = 'client reference';
 const LINK_BACKSLASH = '/';
 const options = {};
 
@@ -6,51 +5,78 @@ const getOptionsFromStorageAsync = getAllStorageLocalData().then(items => {
     Object.assign(options, items);
 })
 
-const openOptionPage = function () {
+const openOptionsPage = function () {
     chrome.runtime.sendMessage('showOptions');
     return false;
 }
-
-$(window).bind("load", async function () {
-
+$(window).on('load', async function () {
     await getOptionsFromStorageAsync;
 
-    if (options.jiraLink === '' || options.jiraLink === undefined) {
-        return openOptionPage();
+    if ($.isEmptyObject(options) === true) {
+        return openOptionsPage();
     }
 
     setTimeout(function () {
-        this.addJiraLinkToAzurePlanningSection(options.jiraLink);
-    }, 5000, options.jiraLink)
+        createDynamicLinksFromOptions(options.dynamicLinkCollection);
+        createStaticLinksFromOptions(options.staticLinkCollection);
+    }, 5000, options)
 });
 
-function addJiraLinkToAzurePlanningSection(jiraLink) {
+function createStaticLinksFromOptions(staticLinkCollection) {
+    $.each(staticLinkCollection, function (index, staticLink) {
+        addStaticLinkToAzurePlanningSection(staticLink);
+    });
+}
+
+function createDynamicLinksFromOptions(dynamicLinkCollection) {
+    $.each(dynamicLinkCollection, function (index, dynamicLink) {
+        addDynamicLinkToAzurePlanningSection(dynamicLink);
+    });
+}
+
+
+function addDynamicLinkToAzurePlanningSection(dynamicLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
     const container = wrapper.find('.tfs-collapsible-content')
     const controlCollection = wrapper.find('.control');
 
-    const clientReferenceInputController = controlCollection.filter(function (index, control) {
-        let label = $(control).find('label').text();
-        if (label.toLowerCase().includes(FILED_LABEL)) {
+    const inputController = controlCollection.filter(function (index, control) {
+        const label = $(control).find('label').text().toLowerCase();
+        const fieldName = dynamicLink.azureField.toLowerCase();
+        if (label.includes(fieldName) === true) {
             return true;
         }
     });
 
-    const clientReferenceInput = clientReferenceInputController.find('input')
-    if (jiraLink.endsWith(LINK_BACKSLASH) === false) {
-        jiraLink = jiraLink + LINK_BACKSLASH
-    }
+    const input = inputController.find('input')
+    let url = validateUrl(dynamicLink.url);
 
-    const href = jiraLink + $(clientReferenceInput).val();
-    const jiraLinkTag = $('<a></a>')
+    const href = url + $(input).val();
+    const dynamicLinkTag = $('<a></a>')
         .attr('href', href)
         .attr('target', '_blank')
         .attr('rel', 'noopener noreferrer')
-        .append('<h3>JIRA Link</h3>');
+        .append(`<h3>${dynamicLink.name}</h3>`);
 
-    if ($(clientReferenceInput).val() !== '') {
-        $(container).append(jiraLinkTag);
+    if ($(input).val() !== '') {
+        $(container).append(dynamicLinkTag);
     }
+}
+
+
+function addStaticLinkToAzurePlanningSection(staticLink) {
+    const wrapper = $('.wrapping-container').find('.section2 .grid-group');
+    const container = wrapper.find('.tfs-collapsible-content')
+    let href = validateUrl(staticLink.url);
+
+
+    const staticLinkTag = $('<a></a>')
+        .attr('href', href)
+        .attr('target', '_blank')
+        .attr('rel', 'noopener noreferrer')
+        .append(`<h3>${staticLink.name}</h3>`);
+
+    $(container).append(staticLinkTag);
 }
 
 function getAllStorageLocalData() {
@@ -62,4 +88,12 @@ function getAllStorageLocalData() {
             resolve(items);
         });
     });
+}
+
+function validateUrl(url) {
+    if (url.endsWith(LINK_BACKSLASH) === false) {
+        url = url + LINK_BACKSLASH
+    }
+
+    return url;
 }

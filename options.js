@@ -1,81 +1,66 @@
 const options = {};
 
 $(async function () {
+    await refreshTables();
 
-    await getOptionsFromStorageAsync;
-
-    await getDynamicLinksCollectionAsync();
-
-    await getStaticLinksCollectionAsync();
-
-    $('#dynamic-link-form').submit(async function (event) {
-
+    $(document).on('submit', '#dynamic-link-form', async function () {
         await getOptionsFromStorageAsync;
 
-        event.preventDefault();
-        let dynamicLink = {
+        const dynamicLink = {
             name: $('#dynamic-link-name').val(),
             url: $('#dynamic-link-url').val(),
-            azuerField: $('#dynamic-azuer-planning-field-title').val()
+            azureField: $('#dynamic-azure-planning-field-title').val()
         }
-        let dynamicLinkCollection = jQuery.isEmptyObject(options.dynamicLinkCollection) ? [] : options.dynamicLinkCollection;
+        let dynamicLinkCollection = $.isEmptyObject(options.dynamicLinkCollection) ? [] : options.dynamicLinkCollection;
 
         dynamicLinkCollection.push(dynamicLink);
-        chrome.storage.local.set({ 'dynamicLinkCollection': dynamicLinkCollection }, () => {
-            if (chrome.runtime.lastError)
-                console.log('Error setting');
-        });
+        setStorageKey({'dynamicLinkCollection': dynamicLinkCollection})
 
-        await getDynamicLinksCollectionAsync();
-
+        await refreshTables();
     });
 
-    $('#static-link-form').submit(async function (event) {
-
+    $(document).on('submit', '#static-link-form', async function () {
         await getOptionsFromStorageAsync;
 
-        event.preventDefault();
         let staticLink = {
             name: $('#static-link-name').val(),
             url: $('#static-link-url').val(),
         }
-        let staticLinkCollection = jQuery.isEmptyObject(options.staticLinkCollection) ? [] : options.staticLinkCollection;
+        let staticLinkCollection = $.isEmptyObject(options.staticLinkCollection) ? [] : options.staticLinkCollection;
 
         staticLinkCollection.push(staticLink);
-        chrome.storage.local.set({ 'staticLinkCollection': staticLinkCollection }, () => {
-            if (chrome.runtime.lastError)
-                console.log('Error setting');
-        });
+        setStorageKey({'staticLinkCollection': staticLinkCollection})
 
-        await getStaticLinksCollectionAsync();
-
+        await refreshTables();
     });
 
 })
 
-const getOptionsFromStorageAsync = getAllStorageLocalData().then(items => {
-    Object.assign(options, items);
+const getOptionsFromStorageAsync = getAllStorageLocalData().then(storageOptions => {
+    Object.assign(options, storageOptions);
 });
 
-async function getDynamicLinksCollectionAsync() {
-    $("#dynamic-link-table").empty();
-    $.each(options.dynamicLinkCollection, function (index, dynamicLink) {
-        $('#dynamic-link-table').append(`<tr id="id-${++index}">
+function addDynamicLinkRow(index, dynamicLink) {
+    $('#dynamic-link-table').append(`<tr id="id-${++index}">
                 <th scope="row">${index}</th>
                 <td>${dynamicLink.name}</td>
                 <td>${dynamicLink.url}</td>
-                <td>${dynamicLink.azuerField}</td>
+                <td>${dynamicLink.azureField}</td>
                 <td>
                     <button type="button" class="btn btn-danger">Delete</button>
                 </td>
             </tr>`);
+}
+
+async function getDynamicLinksCollectionAsync() {
+    $("#dynamic-link-table").empty();
+    $.each(options.dynamicLinkCollection, function (index, dynamicLink) {
+        addDynamicLinkRow(index, dynamicLink);
     });
 }
 
-async function getStaticLinksCollectionAsync() {
-    $("#static-link-table").empty();
-    $.each(options.staticLinkCollection, function (index, staticLink) {
-        $('#static-link-table').append(`<tr id="id-${++index}">
+function addStaticLinkRow(index, staticLink) {
+    $('#static-link-table').append(`<tr id="id-${++index}">
                 <th scope="row">${index}</th>
                 <td>${staticLink.name}</td>
                 <td>${staticLink.url}</td>
@@ -83,7 +68,21 @@ async function getStaticLinksCollectionAsync() {
                     <button type="button" class="btn btn-danger">Delete</button>
                 </td>
             </tr>`);
+}
+
+async function getStaticLinksCollectionAsync() {
+    $("#static-link-table").empty();
+    $.each(options.staticLinkCollection, function (index, staticLink) {
+        addStaticLinkRow(index, staticLink);
     });
+}
+
+async function refreshTables() {
+    await getOptionsFromStorageAsync;
+
+    await getDynamicLinksCollectionAsync();
+
+    await getStaticLinksCollectionAsync();
 }
 
 function getAllStorageLocalData() {
@@ -94,5 +93,13 @@ function getAllStorageLocalData() {
             }
             resolve(items);
         });
+    });
+}
+
+function setStorageKey(newKey) {
+    chrome.storage.local.set(newKey, () => {
+        if (chrome.runtime.lastError) {
+            console.log('Error setting');
+        }
     });
 }
