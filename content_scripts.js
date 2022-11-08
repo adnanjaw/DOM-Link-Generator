@@ -31,7 +31,7 @@ function addJiraLinkToAzurePlanningSection(jiraLink) {
 
     const clientReferenceInputController = controlCollection.filter(function (index, control) {
         let label = $(control).find('label').text();
-        if (label.indexOf(FILED_LABEL) >= 0) {
+        if (label.toLowerCase().includes(FILED_LABEL)) {
             return true;
         }
     });
