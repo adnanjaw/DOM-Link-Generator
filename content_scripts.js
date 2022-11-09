@@ -8,6 +8,10 @@ const getOptionsFromStorageAsync = getAllStorageLocalData().then(items => {
 $(window).on('load', async function () {
     await getOptionsFromStorageAsync;
 
+    if ($.isEmptyObject(options) === true) {
+        return;
+    }
+
     setTimeout(function () {
         createDynamicLinksFromOptions(options.dynamicLinkCollection);
         createStaticLinksFromOptions(options.staticLinkCollection);
