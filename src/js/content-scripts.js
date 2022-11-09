@@ -1,10 +1,6 @@
 const LINK_BACKSLASH = '/';
 const options = {};
 
-const getOptionsFromStorageAsync = getAllStorageLocalData().then(items => {
-    Object.assign(options, items);
-})
-
 $(window).on('load', async function () {
     await getOptionsFromStorageAsync;
 
@@ -30,6 +26,9 @@ function createDynamicLinksFromOptions(dynamicLinkCollection) {
     });
 }
 
+const getOptionsFromStorageAsync = getAllStorageLocalData().then(items => {
+    Object.assign(options, items);
+})
 
 function addDynamicLinkToAzurePlanningSection(dynamicLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
@@ -45,15 +44,11 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
     });
 
     const input = inputController.find('input')
-    let url = validateUrl(dynamicLink.url);
+    const url = validateUrl(dynamicLink.url);
 
     $.each($(input).val().split(','), function (index, value) {
         const href = url + $.trim(value);
-        const dynamicLinkTag = $('<a></a>')
-            .attr('href', href)
-            .attr('target', '_blank')
-            .attr('rel', 'noopener noreferrer')
-            .append(`<h3>${dynamicLink.name}</h3>`);
+        const dynamicLinkTag = getLinkTag(href, dynamicLink);
 
         if ($(input).val() !== '') {
             $(container).append(dynamicLinkTag);
@@ -61,18 +56,11 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
     });
 }
 
-
 function addStaticLinkToAzurePlanningSection(staticLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
     const container = wrapper.find('.tfs-collapsible-content').eq(0);
-    let href = validateUrl(staticLink.url);
-
-
-    const staticLinkTag = $('<a></a>')
-        .attr('href', href)
-        .attr('target', '_blank')
-        .attr('rel', 'noopener noreferrer')
-        .append(`<h3>${staticLink.name}</h3>`);
+    const href = validateUrl(staticLink.url);
+    const staticLinkTag = getLinkTag(href, staticLink);
 
     $(container).append(staticLinkTag);
 }
@@ -86,6 +74,14 @@ function getAllStorageLocalData() {
             resolve(items);
         });
     });
+}
+
+function getLinkTag(href, link) {
+    return $('<a></a>')
+        .attr('href', href)
+        .attr('target', '_blank')
+        .attr('rel', 'noopener noreferrer')
+        .append(`<h3>${link.name}</h3>`);
 }
 
 function validateUrl(url) {
