@@ -1,17 +1,14 @@
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-<br />
 <div align="center">
   <a href="https://github.com/adnanjaw/azure-devops-workitem-link">
     <img src="src/assets/favicon/logo.png" alt="Logo" width="190" height="190">
   </a>
+<div align="center">
 
+<a href="Contributors">![Contributors](https://img.shields.io/badge/Contributors-red?style=plastic)</a>
+<a href="License">![License](https://img.shields.io/badge/License-MIT-greeb?style=plastic)</a>
+<a href="Linkedin">![Linkedin](https://img.shields.io/badge/LinkedIn-yellow)</a>
+
+</div>
 <h1 align="center">Azure DevOps Linkable</h1>
   <p align="center">
     Adds a 'Dynamic and Static' links to Azure DevOps 'work items'.
