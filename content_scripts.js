@@ -33,7 +33,7 @@ function createDynamicLinksFromOptions(dynamicLinkCollection) {
 
 function addDynamicLinkToAzurePlanningSection(dynamicLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
-    const container = wrapper.find('.tfs-collapsible-content')
+    const container = wrapper.find('.tfs-collapsible-content').eq(0);
     const controlCollection = wrapper.find('.control');
 
     const inputController = controlCollection.filter(function (index, control) {
@@ -62,7 +62,7 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
 
 function addStaticLinkToAzurePlanningSection(staticLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
-    const container = wrapper.find('.tfs-collapsible-content')
+    const container = wrapper.find('.tfs-collapsible-content').eq(0);
     let href = validateUrl(staticLink.url);
 
 
