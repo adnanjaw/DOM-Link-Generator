@@ -1,6 +1,6 @@
 {
   "name": "Azure DevOps Linkable",
-  "description": "Adding a links to Azure DevOps WorkItem.",
+  "description": "Adds a 'Dynamic and Static' links to Azure DevOps 'Work items'.",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
