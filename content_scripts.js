@@ -5,16 +5,8 @@ const getOptionsFromStorageAsync = getAllStorageLocalData().then(items => {
     Object.assign(options, items);
 })
 
-const openOptionsPage = function () {
-    chrome.runtime.sendMessage('showOptions');
-    return false;
-}
 $(window).on('load', async function () {
     await getOptionsFromStorageAsync;
-
-    if ($.isEmptyObject(options) === true) {
-        return openOptionsPage();
-    }
 
     setTimeout(function () {
         createDynamicLinksFromOptions(options.dynamicLinkCollection);
