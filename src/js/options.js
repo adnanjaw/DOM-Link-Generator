@@ -15,7 +15,7 @@ $(async function () {
         let dynamicLinkCollection = $.isEmptyObject(options.dynamicLinkCollection) ? [] : options.dynamicLinkCollection;
 
         dynamicLinkCollection.push(dynamicLink);
-        setStorageKey({'dynamicLinkCollection': dynamicLinkCollection})
+        setStorageKey({ 'dynamicLinkCollection': dynamicLinkCollection })
 
         await refreshTables();
     });
@@ -29,7 +29,7 @@ $(async function () {
         let staticLinkCollection = $.isEmptyObject(options.staticLinkCollection) ? [] : options.staticLinkCollection;
 
         staticLinkCollection.push(staticLink);
-        setStorageKey({'staticLinkCollection': staticLinkCollection})
+        setStorageKey({ 'staticLinkCollection': staticLinkCollection })
 
         await refreshTables();
     });
@@ -114,8 +114,10 @@ function setStorageKey(newKey) {
 
 async function deleteDynamicLink(id) {
     console.log(id);
+    alert('coming soon...');
 }
 
 async function deleteStaticLink(id) {
     console.log(id);
+    alert('coming soon...')
 }
