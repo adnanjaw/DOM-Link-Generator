@@ -1,17 +1,17 @@
 const LINK_BACKSLASH = '/';
 const options = {};
 
-$(window).on('load', async function () {
+$(async function () {
     await getOptionsFromStorageAsync;
 
     if ($.isEmptyObject(options) === true) {
         return;
     }
 
-    setTimeout(function () {
+    waitUntilDomLoadedFully().then(function () {
         createDynamicLinksFromOptions(options.dynamicLinkCollection);
         createStaticLinksFromOptions(options.staticLinkCollection);
-    }, 5000, options)
+    })
 });
 
 function createStaticLinksFromOptions(staticLinkCollection) {
@@ -97,3 +97,21 @@ function validateUrl(url) {
 
     return url;
 }
+
+const waitUntilDomLoadedFully = function () {
+    return new Promise(function (callback) {
+        function checkAgain() {
+            setTimeout(function () {
+                const wrapper = $('.wrapping-container').find('.section2 .grid-group');
+                const container = wrapper.find('.tfs-collapsible-content').eq(0);
+                if (container.length > 0) {
+                    callback(container);
+                } else {
+                    checkAgain();
+                }
+            }, 100);
+        }
+
+        checkAgain();
+    });
+};
