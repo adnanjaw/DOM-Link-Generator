@@ -46,7 +46,13 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
     const input = inputController.find('input')
     const url = validateUrl(dynamicLink.url);
 
-    $.each($(input).val().split(','), function (index, value) {
+    const inputValue = $(input).val();
+
+    if (inputValue === '') {
+        return;
+    }
+
+    $.each(inputValue.split(','), function (index, value) {
         const href = url + $.trim(value);
         const dynamicLinkTag = getLinkTag(href, dynamicLink);
 
