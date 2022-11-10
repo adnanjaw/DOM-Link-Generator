@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/adnanjaw/azure-devops-workitem-link">
-    <img src="src/assets/favicon/logo.png" alt="Logo" width="190" height="190">
+    <img src="src/assets/favicon/logo-tran.png" alt="Logo" width="190" height="190">
   </a>
 <div align="center">
 
