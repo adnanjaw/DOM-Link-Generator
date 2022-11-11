@@ -1,17 +1,12 @@
 const LINK_BACKSLASH = '/';
 const options = {};
 
+$(document).on('click', 'a', async function () {
+    await loadLinks();
+});
+
 $(async function () {
-    await getOptionsFromStorageAsync;
-
-    if ($.isEmptyObject(options) === true) {
-        return;
-    }
-
-    waitUntilPlanningSectionIsVisible().then(function () {
-        createDynamicLinksFromOptions(options.dynamicLinkCollection);
-        createStaticLinksFromOptions(options.staticLinkCollection);
-    })
+    await loadLinks();
 });
 
 function createStaticLinksFromOptions(staticLinkCollection) {
@@ -34,6 +29,7 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
     const container = wrapper.find('.tfs-collapsible-content').eq(0);
     const controlCollection = wrapper.find('.control');
+    const linkContainer = container.find('#links-container');
 
     const inputController = controlCollection.filter(function (index, control) {
         const label = $(control).find('label').text().toLowerCase();
@@ -61,7 +57,7 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
         const dynamicLinkTag = getLinkTag(href, dynamicLink);
 
         if ($(input).val() !== '') {
-            $(container).append(dynamicLinkTag);
+            $(linkContainer).append(dynamicLinkTag);
         }
     });
 }
@@ -69,10 +65,12 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
 function addStaticLinkToAzurePlanningSection(staticLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
     const container = wrapper.find('.tfs-collapsible-content').eq(0);
+    const linkContainer = container.find('#links-container');
+
     const href = validateUrl(staticLink.url);
     const staticLinkTag = getLinkTag(href, staticLink);
 
-    $(container).append(staticLinkTag);
+    $(linkContainer).append(staticLinkTag);
 }
 
 function getAllStorageLocalData() {
@@ -102,6 +100,19 @@ function validateUrl(url) {
     return url;
 }
 
+async function loadLinks() {
+    await getOptionsFromStorageAsync;
+
+    if ($.isEmptyObject(options) === true) {
+        return;
+    }
+
+    waitUntilPlanningSectionIsVisible().then(function () {
+        createDynamicLinksFromOptions(options.dynamicLinkCollection);
+        createStaticLinksFromOptions(options.staticLinkCollection);
+    });
+}
+
 const waitUntilPlanningSectionIsVisible = function () {
     return new Promise(function (callback) {
         let tryCount = 100;
@@ -113,6 +124,11 @@ const waitUntilPlanningSectionIsVisible = function () {
             const wrapper = $('.wrapping-container').find('.section2 .grid-group');
             const container = wrapper.find('.tfs-collapsible-content').eq(0);
             if (container.length > 0) {
+                const linkContainer = container.find('#links-container');
+                if (linkContainer.length === 0) {
+                    $('<div id="links-container"></div>').appendTo(container);
+                }
+                linkContainer.empty();
                 callback(container);
             } else {
                 checkIfVisible();
