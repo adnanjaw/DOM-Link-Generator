@@ -8,7 +8,7 @@ $(async function () {
         return;
     }
 
-    waitUntilDomLoadedFully().then(function () {
+    waitUntilPlanningSectionIsVisible().then(function () {
         createDynamicLinksFromOptions(options.dynamicLinkCollection);
         createStaticLinksFromOptions(options.staticLinkCollection);
     })
@@ -98,20 +98,27 @@ function validateUrl(url) {
     return url;
 }
 
-const waitUntilDomLoadedFully = function () {
+const waitUntilPlanningSectionIsVisible = function () {
     return new Promise(function (callback) {
-        function checkAgain() {
-            setTimeout(function () {
-                const wrapper = $('.wrapping-container').find('.section2 .grid-group');
-                const container = wrapper.find('.tfs-collapsible-content').eq(0);
-                if (container.length > 0) {
-                    callback(container);
-                } else {
-                    checkAgain();
-                }
-            }, 100);
+        let tryCount = 100;
+        function checkAndWait() {
+            if (tryCount <= 0) {
+                return;
+            }
+
+            const wrapper = $('.wrapping-container').find('.section2 .grid-group');
+            const container = wrapper.find('.tfs-collapsible-content').eq(0);
+            if (container.length > 0) {
+                callback(container);
+            } else {
+                checkIfVisible();
+            }
         }
 
-        checkAgain();
+        function checkIfVisible() {
+            setTimeout(checkAndWait, 100, --tryCount);
+        }
+
+        checkIfVisible();
     });
 };
