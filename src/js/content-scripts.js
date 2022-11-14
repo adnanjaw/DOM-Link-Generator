@@ -54,7 +54,7 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink) {
         }
 
         const href = url + $.trim(value);
-        const dynamicLinkTag = getLinkTag(href, dynamicLink);
+        const dynamicLinkTag = getLinkTag(href, dynamicLink, $.trim(value));
 
         if ($(input).val() !== '') {
             $(linkContainer).append(dynamicLinkTag);
@@ -68,7 +68,7 @@ function addStaticLinkToAzurePlanningSection(staticLink) {
     const linkContainer = container.find('#links-container');
 
     const href = validateUrl(staticLink.url);
-    const staticLinkTag = getLinkTag(href, staticLink);
+    const staticLinkTag = getLinkTag(href, staticLink, '');
 
     $(linkContainer).append(staticLinkTag);
 }
@@ -84,12 +84,16 @@ function getAllStorageLocalData() {
     });
 }
 
-function getLinkTag(href, link) {
+function getLinkTag(href, link, value) {
+    let h3 = `<h3>${link.name}</h3>`
+    if (value !== '') {
+        h3 = `<h3>${link.name} (${value})</h3>`
+    }
     return $('<a></a>')
         .attr('href', href)
         .attr('target', '_blank')
         .attr('rel', 'noopener noreferrer')
-        .append(`<h3>${link.name}</h3>`);
+        .append(h3);
 }
 
 function validateUrl(url) {
