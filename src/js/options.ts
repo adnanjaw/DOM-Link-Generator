@@ -1,10 +1,14 @@
-const options = {};
+import $ from 'jquery';
+import {StorageService} from "./service/storage-service";
+
+const storageService = new StorageService();
+
+const options: any = {};
 
 $(async function () {
-
     await refreshTables();
-
-    $(document).on('submit', '#dynamic-link-form', async function () {
+    $(document).on('submit', '#dynamic-link-form', async function (event) {
+        event.preventDefault();
         await getOptionsFromStorageAsync;
 
         const dynamicLink = {
@@ -15,7 +19,7 @@ $(async function () {
         let dynamicLinkCollection = $.isEmptyObject(options.dynamicLinkCollection) ? [] : options.dynamicLinkCollection;
 
         dynamicLinkCollection.push(dynamicLink);
-        setStorageKey({ 'dynamicLinkCollection': dynamicLinkCollection })
+        await storageService.setStorageKey({'dynamicLinkCollection': dynamicLinkCollection})
 
         await refreshTables();
     });
@@ -29,7 +33,7 @@ $(async function () {
         let staticLinkCollection = $.isEmptyObject(options.staticLinkCollection) ? [] : options.staticLinkCollection;
 
         staticLinkCollection.push(staticLink);
-        setStorageKey({ 'staticLinkCollection': staticLinkCollection })
+        await storageService.setStorageKey({'staticLinkCollection': staticLinkCollection})
 
         await refreshTables();
     });
@@ -44,11 +48,11 @@ $(async function () {
 
 })
 
-const getOptionsFromStorageAsync = getAllStorageLocalData().then(storageOptions => {
+const getOptionsFromStorageAsync = storageService.getAllStorageLocalData().then(storageOptions => {
     Object.assign(options, storageOptions);
 });
 
-function addDynamicLinkRow(index, dynamicLink) {
+function addDynamicLinkRow(index: number, dynamicLink: any) {
     $('#dynamic-link-table').append(`<tr id="id-${++index}">
                 <th scope="row">${index}</th>
                 <td>${dynamicLink.name}</td>
@@ -62,19 +66,19 @@ function addDynamicLinkRow(index, dynamicLink) {
 
 async function getDynamicLinksCollectionAsync() {
     $("#dynamic-link-table").empty();
-    $.each(options.dynamicLinkCollection, function (index, dynamicLink) {
+    $.each(options.dynamicLinkCollection, function (index: number, dynamicLink) {
         addDynamicLinkRow(index, dynamicLink);
     });
 }
 
 async function getStaticLinksCollectionAsync() {
     $("#static-link-table").empty();
-    $.each(options.staticLinkCollection, function (index, staticLink) {
+    $.each(options.staticLinkCollection, function (index: number, staticLink) {
         addStaticLinkRow(index, staticLink);
     });
 }
 
-function addStaticLinkRow(index, staticLink) {
+function addStaticLinkRow(index: number, staticLink: any) {
     $('#static-link-table').append(`<tr id="id-${++index}">
                 <th scope="row">${index}</th>
                 <td>${staticLink.name}</td>
@@ -93,31 +97,12 @@ async function refreshTables() {
     await getStaticLinksCollectionAsync();
 }
 
-function getAllStorageLocalData() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get(null, (items) => {
-            if (chrome.runtime.lastError) {
-                return reject(chrome.runtime.lastError);
-            }
-            resolve(items);
-        });
-    });
-}
-
-function setStorageKey(newKey) {
-    chrome.storage.local.set(newKey, () => {
-        if (chrome.runtime.lastError) {
-            console.log('Error setting');
-        }
-    });
-}
-
-async function deleteDynamicLink(id) {
+async function deleteDynamicLink(id: number) {
     console.log(id);
     alert('coming soon...');
 }
 
-async function deleteStaticLink(id) {
+async function deleteStaticLink(id: number) {
     console.log(id);
     alert('coming soon...')
 }

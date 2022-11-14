@@ -1,0 +1,32 @@
+{
+  "name": "azure-devops-workitem-link",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">   <a href=\"https://github.com/adnanjaw/azure-devops-workitem-link\">     <img src=\"src/assets/favicon/logo-tran.png\" alt=\"Logo\" width=\"190\" height=\"190\">   </a> <div align=\"center\">",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adnanjaw/azure-devops-workitem-link.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adnanjaw/azure-devops-workitem-link/issues"
+  },
+  "homepage": "https://github.com/adnanjaw/azure-devops-workitem-link#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.0.200",
+    "@types/jquery": "^3.5.14",
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.8.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "jquery": "^3.6.1"
+  }
+}

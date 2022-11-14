@@ -32,8 +32,8 @@
         "https://dev.azure.com/*"
       ],
       "js": [
-        "src/js/jquery-3.6.0.min.js",
-        "src/js/content-scripts.js"
+        "src/js/content-script.js",
+        "src/js/vendor.js"
       ]
     }
   ],
