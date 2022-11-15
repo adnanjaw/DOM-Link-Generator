@@ -1,7 +1,7 @@
 {
   "name": "azure-devops-workitem-link",
   "version": "1.0.0",
-  "description": "<div align=\"center\">   <a href=\"https://github.com/adnanjaw/azure-devops-workitem-link\">     <img src=\"src/assets/favicon/logo-tran.png\" alt=\"Logo\" width=\"190\" height=\"190\">   </a> <div align=\"center\">",
+  "description": "Adds dynamic and static links to Azure DevOps work items.",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack/webpack.config.js"
