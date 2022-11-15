@@ -14,7 +14,7 @@ $(document).on('click', 'a', async function () {
     await loadLinks();
 });
 
-$(window).on("load", async function () {
+$(window).on('load', async function () {
     await loadLinks();
 });
 
