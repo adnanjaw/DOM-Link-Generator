@@ -1,25 +1,30 @@
 import $ from 'jquery';
 import {StorageService} from "./service/storage-service";
+import {DynamicLink} from "./model/DynamicLink";
+import {Link} from "./model/Link";
 
 const storageService = new StorageService();
 
-const options: any = {};
+const options: any = {
+    'dynamicLinkCollection': [],
+    'staticLinkCollection': []
+};
 
-$(async function () {
+$(window).on("load", async function () {
     await refreshTables();
-    $(document).on('submit', '#dynamic-link-form', async function (event) {
-        event.preventDefault();
+
+    $(document).on('submit', '#dynamic-link-form', async function () {
         await getOptionsFromStorageAsync;
 
-        const dynamicLink = {
-            name: $('#dynamic-link-name').val(),
-            url: $('#dynamic-link-url').val(),
-            azureField: $('#dynamic-azure-planning-field-title').val()
-        }
-        let dynamicLinkCollection = $.isEmptyObject(options.dynamicLinkCollection) ? [] : options.dynamicLinkCollection;
+        const dynamicLink = new DynamicLink(
+            String($('#dynamic-link-name').val()),
+            String($('#dynamic-link-url').val()),
+            String($('#dynamic-azure-planning-field-title').val())
+        ).serialize();
 
-        dynamicLinkCollection.push(dynamicLink);
-        await storageService.setStorageKey({'dynamicLinkCollection': dynamicLinkCollection})
+        options.dynamicLinkCollection.push(dynamicLink);
+
+        await storageService.setStorageKey({'dynamicLinkCollection': options.dynamicLinkCollection})
 
         await refreshTables();
     });
@@ -27,13 +32,14 @@ $(async function () {
     $(document).on('submit', '#static-link-form', async function () {
         await getOptionsFromStorageAsync;
 
-        let staticLink = {
-            name: $('#static-link-name').val(), url: $('#static-link-url').val(),
-        }
-        let staticLinkCollection = $.isEmptyObject(options.staticLinkCollection) ? [] : options.staticLinkCollection;
+        let staticLink = new Link(
+            String($('#static-link-name').val()),
+            String($('#static-link-url').val())
+        ).serialize()
 
-        staticLinkCollection.push(staticLink);
-        await storageService.setStorageKey({'staticLinkCollection': staticLinkCollection})
+        options.staticLinkCollection.push(staticLink);
+
+        await storageService.setStorageKey({'staticLinkCollection': options.staticLinkCollection})
 
         await refreshTables();
     });
@@ -45,19 +51,14 @@ $(async function () {
     $(document).on('click', '.deleteStaticLink', function () {
         deleteStaticLink($(this).data('id'));
     });
-
-})
-
-const getOptionsFromStorageAsync = storageService.getAllStorageLocalData().then(storageOptions => {
-    Object.assign(options, storageOptions);
 });
 
-function addDynamicLinkRow(index: number, dynamicLink: any) {
+function addDynamicLinkRow(index: number, dynamicLink: DynamicLink) {
     $('#dynamic-link-table').append(`<tr id="id-${++index}">
                 <th scope="row">${index}</th>
                 <td>${dynamicLink.name}</td>
                 <td>${dynamicLink.url}</td>
-                <td>${dynamicLink.azureField}</td>
+                <td>${dynamicLink.azureFieldName}</td>
                 <td>
                     <button type="button" class="btn btn-danger deleteDynamicLink" data-id="${index - 1}">Delete</button>
                 </td>
@@ -67,14 +68,14 @@ function addDynamicLinkRow(index: number, dynamicLink: any) {
 async function getDynamicLinksCollectionAsync() {
     $("#dynamic-link-table").empty();
     $.each(options.dynamicLinkCollection, function (index: number, dynamicLink) {
-        addDynamicLinkRow(index, dynamicLink);
+        addDynamicLinkRow(index, DynamicLink.fromSerialized(dynamicLink));
     });
 }
 
 async function getStaticLinksCollectionAsync() {
     $("#static-link-table").empty();
     $.each(options.staticLinkCollection, function (index: number, staticLink) {
-        addStaticLinkRow(index, staticLink);
+        addStaticLinkRow(index, Link.fromSerialized(staticLink));
     });
 }
 
@@ -106,3 +107,7 @@ async function deleteStaticLink(id: number) {
     console.log(id);
     alert('coming soon...')
 }
+
+const getOptionsFromStorageAsync = storageService.getAllStorageLocalData().then(storageOptions => {
+    Object.assign(options, storageOptions);
+});

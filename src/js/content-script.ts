@@ -1,27 +1,32 @@
 import $ from 'jquery'
 import {StorageService} from "./service/storage-service";
+import {DynamicLink} from "./model/DynamicLink";
+import {Link} from "./model/Link";
+import {LinkHelper} from "./helper/link-helper";
 
 const storageService = new StorageService();
-const LINK_BACKSLASH: string = '/';
-const options: any = {};
+const options: any = {
+    'dynamicLinkCollection': [],
+    'staticLinkCollection': []
+};
 
 $(document).on('click', 'a', async function () {
     await loadLinks();
 });
 
-$(async function () {
+$(window).on("load", async function () {
     await loadLinks();
 });
 
-function createStaticLinksFromOptions(staticLinkCollection: Object) {
-    $.each(staticLinkCollection, function (index, staticLink) {
-        addStaticLinkToAzurePlanningSection(staticLink);
+function createStaticLinksFromOptions() {
+    $.each(options.staticLinkCollection, function (index, staticLink) {
+        addStaticLinkToAzurePlanningSection(Link.fromSerialized(staticLink));
     });
 }
 
-function createDynamicLinksFromOptions(dynamicLinkCollection: Object) {
-    $.each(dynamicLinkCollection, function (index, dynamicLink) {
-        addDynamicLinkToAzurePlanningSection(dynamicLink);
+function createDynamicLinksFromOptions() {
+    $.each(options.dynamicLinkCollection, function (index, dynamicLink) {
+        addDynamicLinkToAzurePlanningSection(DynamicLink.fromSerialized(dynamicLink));
     });
 }
 
@@ -32,19 +37,14 @@ const getOptionsFromStorageAsync = storageService.getAllStorageLocalData().then(
 async function loadLinks() {
     await getOptionsFromStorageAsync;
 
-    if (isEmpty(options)) {
+    if (LinkHelper.isEmpty(options)) {
         return;
     }
 
     waitUntilPlanningSectionIsVisible().then(function () {
-        createDynamicLinksFromOptions(options.dynamicLinkCollection);
-        createStaticLinksFromOptions(options.staticLinkCollection);
+        createDynamicLinksFromOptions();
+        createStaticLinksFromOptions();
     });
-}
-
-
-function isEmpty(obj: Record<string, any>): boolean {
-    return Object.keys(obj).length === 0;
 }
 
 const waitUntilPlanningSectionIsVisible = function () {
@@ -78,7 +78,7 @@ const waitUntilPlanningSectionIsVisible = function () {
     });
 };
 
-function addDynamicLinkToAzurePlanningSection(dynamicLink: any) {
+function addDynamicLinkToAzurePlanningSection(dynamicLink: DynamicLink) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
     const container = wrapper.find('.tfs-collapsible-content').eq(0);
     const controlCollection = wrapper.find('.control');
@@ -86,26 +86,24 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink: any) {
 
     const inputController = controlCollection.filter((index: number, control: any): boolean => {
         const label = $(control).find('label').text().toLowerCase();
-        const fieldName = dynamicLink.azureField.toLowerCase();
+        const fieldName = dynamicLink.azureFieldName.toLowerCase();
         return label.includes(fieldName);
     });
 
     const input = inputController.find('input')
-    const url = validateUrl(dynamicLink.url);
-
     const inputValue: any = $(input).val();
 
     if (inputValue === '') {
         return;
     }
 
-    $.each(inputValue.split(','), function (index, value) {
-        if (value.trim() === '') {
+    $.each(inputValue.split(','), function (index: number, value: string) {
+        const cleanValue = value.trim();
+        if (cleanValue === '') {
             return;
         }
 
-        const href = url + value.trim();
-        const dynamicLinkTag = getLinkTag(href, dynamicLink, value);
+        const dynamicLinkTag = LinkHelper.createLinkTag(dynamicLink, cleanValue);
 
         if ($(input).val() !== '') {
             $(linkContainer).append(dynamicLinkTag);
@@ -113,33 +111,12 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink: any) {
     });
 }
 
-function addStaticLinkToAzurePlanningSection(staticLink: any) {
+function addStaticLinkToAzurePlanningSection(staticLink: Link) {
     const wrapper = $('.wrapping-container').find('.section2 .grid-group');
     const container = wrapper.find('.tfs-collapsible-content').eq(0);
     const linkContainer = container.find('#links-container');
 
-    const href = validateUrl(staticLink.url);
-    const staticLinkTag = getLinkTag(href, staticLink, '');
+    const staticLinkTag = LinkHelper.createLinkTag(staticLink);
 
     $(linkContainer).append(staticLinkTag);
-}
-
-function getLinkTag(href: string, link: any, value: string) {
-    let h3 = `<h3>${link.name}</h3>`
-    if (value.length > 0) {
-        h3 = `<h3>${link.name} (${value.trim()})</h3>`
-    }
-    return $('<a></a>')
-        .attr('href', href)
-        .attr('target', '_blank')
-        .attr('rel', 'noopener noreferrer')
-        .append(h3);
-}
-
-function validateUrl(url: string) {
-    if (!url.endsWith(LINK_BACKSLASH)) {
-        url = url + LINK_BACKSLASH
-    }
-
-    return url;
 }
