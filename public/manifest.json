@@ -17,10 +17,7 @@
   },
   "permissions": [
     "activeTab",
-    "tabGroups",
-    "tabs",
-    "storage",
-    "nativeMessaging"
+    "storage"
   ],
   "options_page": "src/html/options.html",
   "background": {
