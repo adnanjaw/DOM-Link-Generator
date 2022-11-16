@@ -16,8 +16,9 @@
 </div>
 
 ## Getting Started
-
 - `git clone git@github.com:adnanjaw/azure-devops-workitem-link.git`
+- `cd cloned repo`
+- `docker compose up -d` to generate dist directory
 - open Google Chrome browser
 - go to `chrome://extensions/`
 - activate Developer mode from the right corner.
