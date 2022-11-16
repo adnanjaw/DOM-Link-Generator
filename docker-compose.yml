@@ -2,10 +2,14 @@ version: '3.8'
 
 services:
   app:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    command: npm run build
+    image: node:17
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        npm install
+        npm run build
+    working_dir: /app
     volumes:
       - .:/app
 
