@@ -16,7 +16,6 @@
     "128": "src/assets/favicon/favicon-192x192.png"
   },
   "permissions": [
-    "activeTab",
     "storage"
   ],
   "options_page": "src/html/options.html",
