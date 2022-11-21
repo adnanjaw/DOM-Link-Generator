@@ -10,7 +10,33 @@ const options: any = {
     'staticLinkCollection': []
 };
 
+function setUpTabsNavbar() {
+    $('.card').hide();
+    $('.card:first').show();
+    $('#tabs div a:first').addClass('active');
+    $('#tabs div:not(:first)').addClass('inactive');
+    $('#tabs div').on('click', function () {
+        const tab = $(this).attr('id');
+        if ($(this).hasClass('inactive')) {
+            $('#tabs div').addClass('inactive');
+
+            $('#tabs div a').removeClass('active');
+
+            $(this).removeClass('inactive');
+            $(this).find('a').addClass('active');
+
+            $('.card').hide();
+            $('#' + tab + '-container').fadeIn('slow');
+        }
+    });
+}
+
 $(window).on("load", async function () {
+
+    setUpTabsNavbar();
+
+    await setOptionsPageTitle();
+
     await refreshTables();
 
     $(document).on('submit', '#dynamic-link-form', async function () {
@@ -60,7 +86,7 @@ function addDynamicLinkRow(index: number, dynamicLink: DynamicLink) {
                 <td>${dynamicLink.url}</td>
                 <td>${dynamicLink.azureFieldName}</td>
                 <td>
-                    <button type="button" class="btn btn-danger deleteDynamicLink" data-id="${index - 1}">Delete</button>
+                    <button type="button" class="btn btn-outline-danger deleteDynamicLink" data-id="${index - 1}">Delete</button>
                 </td>
             </tr>`);
 }
@@ -85,7 +111,7 @@ function addStaticLinkRow(index: number, staticLink: any) {
                 <td>${staticLink.name}</td>
                 <td>${staticLink.url}</td>
                 <td>
-                    <button type="button" class="btn btn-danger deleteStaticLink" data-id="${index - 1}">Delete</button>
+                    <button type="button" class="btn btn-outline-danger deleteStaticLink" data-id="${index - 1}">Delete</button>
                 </td>
             </tr>`);
 }
@@ -99,13 +125,32 @@ async function refreshTables() {
 }
 
 async function deleteDynamicLink(id: number) {
-    console.log(id);
-    alert('coming soon...');
+    await getOptionsFromStorageAsync;
+
+    options.dynamicLinkCollection.forEach((element: DynamicLink, index: number) => {
+        if (index === id) options.dynamicLinkCollection.splice(index, 1);
+    });
+
+    await storageService.setStorageKey({'dynamicLinkCollection': options.dynamicLinkCollection})
+
+    await refreshTables();
 }
 
 async function deleteStaticLink(id: number) {
-    console.log(id);
-    alert('coming soon...')
+    await getOptionsFromStorageAsync;
+
+    options.staticLinkCollection.forEach((element: DynamicLink, index: number) => {
+        if (index === id) options.staticLinkCollection.splice(index, 1);
+    });
+
+    await storageService.setStorageKey({'staticLinkCollection': options.staticLinkCollection})
+
+    await refreshTables();
+}
+
+async function setOptionsPageTitle() {
+    const manifestData = chrome.runtime.getManifest();
+    $('#option-page-title').text('Add Options: (v' + manifestData.version + ')');
 }
 
 const getOptionsFromStorageAsync = storageService.getAllStorageLocalData().then(storageOptions => {
