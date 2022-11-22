@@ -15,6 +15,9 @@
   </p>
 </div>
 
+## Chrome Web Store
+Install and use the Chrome extension via chrome web store using this [LINK](https://chrome.google.com/webstore/detail/azure-devops-linkable/ohihmhcjfeolchedmklglmchppomjaci) .
+
 ## Getting Started
 - `git clone git@github.com:adnanjaw/azure-devops-workitem-link.git`
 - `cd cloned repo`
