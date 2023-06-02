@@ -56,8 +56,7 @@ const waitUntilPlanningSectionIsVisible = function () {
                 return;
             }
 
-            const wrapper = $('.wrapping-container').find('.section2 .grid-group');
-            const container = wrapper.find('.tfs-collapsible-content').eq(0);
+            const container = getPlaningContainer();
             if (container.length > 0) {
                 const linkContainer = container.find('#links-container');
                 if (linkContainer.length === 0) {
@@ -79,13 +78,12 @@ const waitUntilPlanningSectionIsVisible = function () {
 };
 
 function addDynamicLinkToAzurePlanningSection(dynamicLink: DynamicLink) {
-    const wrapper = $('.wrapping-container').find('.section2 .grid-group');
-    const container = wrapper.find('.tfs-collapsible-content').eq(0);
-    const controlCollection = wrapper.find('.control');
+    const container = getPlaningContainer();
+    const controlCollection = container.find('.work-item-form-control');
     const linkContainer = container.find('#links-container');
 
     const inputController = controlCollection.filter((index: number, control: any): boolean => {
-        const label = $(control).find('label').text().toLowerCase();
+        const label = $(control).closest('.work-item-form-control-wrapper').find('label').text().toLowerCase();
         const fieldName = dynamicLink.azureFieldName.toLowerCase();
         return label.includes(fieldName);
     });
@@ -112,11 +110,15 @@ function addDynamicLinkToAzurePlanningSection(dynamicLink: DynamicLink) {
 }
 
 function addStaticLinkToAzurePlanningSection(staticLink: Link) {
-    const wrapper = $('.wrapping-container').find('.section2 .grid-group');
-    const container = wrapper.find('.tfs-collapsible-content').eq(0);
+    const container = getPlaningContainer();
     const linkContainer = container.find('#links-container');
 
     const staticLinkTag = LinkHelper.createLinkTag(staticLink);
 
     $(linkContainer).append(staticLinkTag);
+}
+
+function getPlaningContainer() {
+    // Find the parent div with the class "work-item-form-group" and title "Planning"
+    return $('.work-item-form-group:has(span[role="heading"][aria-level="2"]:contains("Planning"))');
 }
